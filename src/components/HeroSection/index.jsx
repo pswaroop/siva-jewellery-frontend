@@ -16,7 +16,7 @@ const HeroSection = () => {
   const slides = [
     {
       image: hero1,
-      title: 'Jewelry',
+      title: '',
       subtitle: '',
       cta: 'Explore Collection',
       highlight: '',
@@ -25,7 +25,7 @@ const HeroSection = () => {
     },
     {
       image: hero2,
-      title: 'Jewelry',
+      title: '',
       subtitle: '',
       cta: 'View Diamonds',
       highlight: '',
@@ -34,9 +34,9 @@ const HeroSection = () => {
     },
     {
       image: hero3,
-      title: 'Jewelry',
+      title: '',
       subtitle: '',
-      cta: 'Discover More',
+      cta: 'Explore Categories',
       highlight: '',
       buttonVariant: 'primary',
       overlay: 'linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%)',
@@ -110,9 +110,9 @@ const HeroSection = () => {
           />
           
           {/* Content */}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-center justify-center h-full">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-end justify-center h-full pb-16">
             <motion.div 
-              className="max-w-2xl text-white text-center"
+              className="max-w-2xl text-white text-center w-full"
               variants={contentVariants}
               initial="hidden"
               animate="visible"
@@ -139,14 +139,6 @@ const HeroSection = () => {
                 >
                   {slides[currentSlide].cta}
                   <FaArrowRight className="ml-2" />
-                </motion.button>
-                <motion.button 
-                  onClick={() => navigate('/about')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 rounded-full font-medium transition-all duration-300 text-sm tracking-wider uppercase border-2 border-white text-white hover:bg-white/10 flex items-center justify-center"
-                >
-                  Learn More
                 </motion.button>
               </div>
             </motion.div>

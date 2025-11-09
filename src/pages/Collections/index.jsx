@@ -9,8 +9,16 @@ const CollectionsPage = ({ updateCartItems, cartItems }) => {
 
   const handleWhatsAppConsultation = () => {
     const phoneNumber = '919505492525';
-    const message = encodeURIComponent('Hello! I would like to schedule a consultation to help me choose the perfect jewelry piece.');
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    const message = `Hello! 👋
+
+I'm interested in your jewelry collections and would like to:
+• Get more information about a specific piece
+• Schedule a consultation
+• Check availability and pricing
+
+Please let me know the best time to connect. Thank you!`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
   };
 
   return (
@@ -45,8 +53,29 @@ const CollectionsPage = ({ updateCartItems, cartItems }) => {
         </div>
       </section>
 
+      {/* Category Filter */}
+      <section className="py-6 bg-white border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-3">
+            {['All', 'Rings', 'Necklaces', 'Earrings', 'Bracelets', 'Bangles'].map((category) => (
+              <button
+                key={category}
+                onClick={() => setSearchTerm(category === 'All' ? '' : category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                  searchTerm === category || (category === 'All' && !searchTerm)
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Collections Grid */}
-      <section className="py-16 bg-white">
+      <section className="py-12 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <FeaturedCollections 
             updateCartItems={updateCartItems} 
@@ -77,7 +106,7 @@ const CollectionsPage = ({ updateCartItems, cartItems }) => {
                 onClick={handleWhatsAppConsultation}
                 className="bg-white text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors duration-300 shadow-lg"
               >
-                Schedule Consultation
+                Chat on WhatsApp
               </button>
               <button 
                 onClick={() => navigate('/contact')}

@@ -15,6 +15,31 @@ import Collections from './pages/Collections';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [appliedPromo, setAppliedPromo] = useState(null);
+
+  // Define available promo codes
+  const promoCodes = {
+    'WELCOME10': { discount: 10, type: 'percentage', description: '10% off on your order' },
+    'SAVE500': { discount: 500, type: 'fixed', description: '₹500 off on your order' },
+    'FESTIVE20': { discount: 20, type: 'percentage', description: '20% off festive special' },
+    'GOLD15': { discount: 15, type: 'percentage', description: '15% off on gold jewelry' },
+    'FIRST25': { discount: 25, type: 'percentage', description: '25% off for first-time buyers' }
+  };
+
+  // Function to validate and apply promo code
+  const applyPromoCode = (code) => {
+    const upperCode = code.toUpperCase().trim();
+    if (promoCodes[upperCode]) {
+      setAppliedPromo({ code: upperCode, ...promoCodes[upperCode] });
+      return { success: true, message: `Promo code "${upperCode}" applied successfully!` };
+    }
+    return { success: false, message: 'Invalid promo code' };
+  };
+
+  // Function to remove promo code
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+  };
 
   // Function to update cart items - will be passed to components that need it
   const updateCartItems = (newCartItems) => {
@@ -57,6 +82,9 @@ function App() {
         cartItems={cartItems} 
         onIncreaseQuantity={handleIncreaseQuantity}
         onDecreaseQuantity={handleDecreaseQuantity}
+        appliedPromo={appliedPromo}
+        onApplyPromo={applyPromoCode}
+        onRemovePromo={removePromoCode}
       />
       <main className="flex-grow pt-16">
         <Routes>
@@ -75,6 +103,9 @@ function App() {
         onIncreaseQuantity={handleIncreaseQuantity}
         onDecreaseQuantity={handleDecreaseQuantity}
         onRemoveItem={handleRemoveItem}
+        appliedPromo={appliedPromo}
+        onApplyPromo={applyPromoCode}
+        onRemovePromo={removePromoCode}
       />
     </div>
   );

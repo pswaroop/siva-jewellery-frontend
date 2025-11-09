@@ -259,58 +259,65 @@ const FeaturedCollections = ({
         </motion.div>
 
         {/* Collections Grid */}
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          {displayedCollections.map((item) => (
-            <motion.div 
-              key={item.id}
-              className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full border border-gray-100"
-              variants={itemVariants}
-            >
-              <div className="relative h-56 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
-                <div className="w-full h-full">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
+        {displayedCollections.length === 0 ? (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-medium text-gray-600">No items found matching &quot;{searchTerm}&quot;</h3>
+            <p className="text-gray-500 mt-2">Try a different search term or browse our collections</p>
+          </div>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            {displayedCollections.map((item) => (
+              <motion.div 
+                key={item.id}
+                className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full border border-gray-100"
+                variants={itemVariants}
+              >
+                <div className="relative h-56 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
+                  <div className="w-full h-full">
+                    <img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  </div>
+                  <span className="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                    {item.category}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <span className="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-                  {item.category}
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
-              <div className="p-5 flex-grow flex flex-col">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">{item.name}</h3>
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-gray-600 text-sm flex items-center">
-                    <svg className="w-4 h-4 mr-1.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                      <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"></path>
-                    </svg>
-                    {item.count}
-                  </p>
-                  <div className="text-lg font-bold text-amber-700">₹{item.price.toLocaleString('en-IN')}</div>
+                <div className="p-5 flex-grow flex flex-col">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">{item.name}</h3>
+                  <div className="flex justify-between items-center mb-4">
+                    <p className="text-gray-600 text-sm flex items-center">
+                      <svg className="w-4 h-4 mr-1.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"></path>
+                      </svg>
+                      {item.count}
+                    </p>
+                    <div className="text-lg font-bold text-amber-700">₹{item.price.toLocaleString('en-IN')}</div>
+                  </div>
+                  
+                  {/* Add to Cart Button */}
+                  <button 
+                    onClick={() => handleAddToCart(item)}
+                    className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  >
+                    <FaShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </button>
                 </div>
-                
-                {/* Add to Cart Button */}
-                <button 
-                  onClick={() => handleAddToCart(item)}
-                  className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                >
-                  <FaShoppingCart className="w-4 h-4" />
-                  Add to Cart
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
         
         {/* Explore All Button */}
       {showOnlyFeatured && (

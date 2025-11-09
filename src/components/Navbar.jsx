@@ -1,16 +1,55 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { FaShoppingCart, FaMinus, FaPlus, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
 
-const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity }) => {
+const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity, appliedPromo, onApplyPromo, onRemovePromo }) => {
   // Calculate total items in cart
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   
-  // Calculate total price
-  const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  // Calculate subtotal
+  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  
+  // Calculate discount
+  let discount = 0;
+  if (appliedPromo) {
+    if (appliedPromo.type === 'percentage') {
+      discount = (subtotal * appliedPromo.discount) / 100;
+    } else if (appliedPromo.type === 'fixed') {
+      discount = appliedPromo.discount;
+    }
+  }
+  
+  // Calculate total price after discount
+  const totalPrice = Math.max(0, subtotal - discount);
   
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [promoInput, setPromoInput] = useState('');
+  const [promoMessage, setPromoMessage] = useState('');
+
+  // Handle apply promo code
+  const handleApplyPromo = () => {
+    if (!promoInput.trim()) {
+      setPromoMessage('Please enter a promo code');
+      return;
+    }
+    
+    const result = onApplyPromo(promoInput);
+    setPromoMessage(result.message);
+    
+    if (result.success) {
+      setPromoInput('');
+      setTimeout(() => setPromoMessage(''), 3000);
+    }
+  };
+  
+  // Handle remove promo
+  const handleRemovePromo = () => {
+    onRemovePromo();
+    setPromoInput('');
+    setPromoMessage('');
+  };
 
   // Handle send to WhatsApp
   const handleSendToWhatsApp = () => {
@@ -20,14 +59,24 @@ const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity }) => {
     }
     
     // Format cart items for WhatsApp message
-    let cartMessage = 'Hello! I would like to order the following items:\n';
+    let cartMessage = 'Hello! I would like to order the following items:\n\n';
     
     cartItems.forEach((item, index) => {
       const itemTotal = item.price * item.quantity;
       cartMessage += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ₹${itemTotal.toLocaleString('en-IN')}\n`;
     });
     
-    cartMessage += `\nTotal: ₹${totalPrice.toLocaleString('en-IN')}\n\nPlease confirm availability and provide payment details.`;
+    cartMessage += `\n━━━━━━━━━━━━━━━━━\n`;
+    cartMessage += `Subtotal: ₹${subtotal.toLocaleString('en-IN')}\n`;
+    
+    if (appliedPromo) {
+      cartMessage += `Promo Code: ${appliedPromo.code}\n`;
+      cartMessage += `Discount: -₹${discount.toLocaleString('en-IN')}\n`;
+    }
+    
+    cartMessage += `Total: ₹${totalPrice.toLocaleString('en-IN')}\n`;
+    cartMessage += `━━━━━━━━━━━━━━━━━\n\n`;
+    cartMessage += `Please confirm availability and provide payment details.`;
     
     // Encode message for URL
     const encodedMessage = encodeURIComponent(cartMessage);
@@ -183,23 +232,90 @@ const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity }) => {
             })}
           </div>
           
+          {/* Promo Code Section */}
           <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-3">
-              <span className="font-semibold text-gray-800">Total:</span>
-              <span className="font-bold text-lg text-amber-700">₹{totalPrice.toLocaleString('en-IN')}</span>
+            {!appliedPromo ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Have a promo code?</label>
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                    placeholder="Enter code"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                    onKeyPress={(e) => e.key === 'Enter' && handleApplyPromo()}
+                  />
+                  <button
+                    onClick={handleApplyPromo}
+                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm transition-colors"
+                  >
+                    Apply
+                  </button>
+                </div>
+                {promoMessage && (
+                  <p className={`mt-2 text-xs ${promoMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                    {promoMessage}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-semibold text-green-800">{appliedPromo.code}</p>
+                    <p className="text-xs text-green-600">{appliedPromo.description}</p>
+                  </div>
+                  <button
+                    onClick={handleRemovePromo}
+                    className="text-red-500 hover:text-red-700 text-xs font-medium"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Total Section */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="space-y-2 mb-3">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="text-gray-800">₹{subtotal.toLocaleString('en-IN')}</span>
+              </div>
+              {appliedPromo && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-green-600">Discount:</span>
+                  <span className="text-green-600">-₹{discount.toLocaleString('en-IN')}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                <span className="font-semibold text-gray-800">Total:</span>
+                <span className="font-bold text-lg text-amber-700">₹{totalPrice.toLocaleString('en-IN')}</span>
+              </div>
             </div>
             <button
               onClick={handleSendToWhatsApp}
-              className="w-full flex items-center justify-center px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-all duration-300"
+              className="w-full flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-all duration-300 shadow-md"
             >
               <FaWhatsapp className="w-5 h-5 mr-2" />
-              Send Order
+              Send Order via WhatsApp
             </button>
           </div>
         </div>
       )}
     </nav>
   );
+};
+
+Navbar.propTypes = {
+  cartItems: PropTypes.array,
+  onIncreaseQuantity: PropTypes.func,
+  onDecreaseQuantity: PropTypes.func,
+  appliedPromo: PropTypes.object,
+  onApplyPromo: PropTypes.func,
+  onRemovePromo: PropTypes.func
 };
 
 export default Navbar;
