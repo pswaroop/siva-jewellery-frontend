@@ -19,7 +19,7 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const phoneNumber = '919505492525';
+    const phoneNumber = '918977173601'
     const message = `*New Contact Form Submission*%0A%0A` +
                    `*Name:* ${formData.name}%0A` +
                    `*Email:* ${formData.email}%0A` +
@@ -152,7 +152,7 @@ const Contact = () => {
                         <FaPhoneAlt className="mt-1 mr-3 flex-shrink-0" />
                         <div>
                           <h4 className="font-semibold">Call Us</h4>
-                          <a href="tel:+919505492525" className="text-amber-100 hover:text-white text-sm block">+91 95054 92525</a>
+                          <a href="tel:+918977173601" className="text-amber-100 hover:text-white text-sm block">+91 8977173601</a>
                         </div>
                       </div>
                       

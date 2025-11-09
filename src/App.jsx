@@ -97,7 +97,7 @@ function App() {
       </main>
       <Footer />
       <WhatsAppButton 
-        phoneNumber="919505492525"
+        phoneNumber="918977173601"
         message="Hello! I'm interested in your jewelry collection."
         cartItems={cartItems}
         onIncreaseQuantity={handleIncreaseQuantity}

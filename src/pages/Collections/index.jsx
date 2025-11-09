@@ -8,7 +8,7 @@ const CollectionsPage = ({ updateCartItems, cartItems }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleWhatsAppConsultation = () => {
-    const phoneNumber = '919505492525';
+    const phoneNumber = '918977173601';
     const message = `Hello! 👋
 
 I'm interested in your jewelry collections and would like to:

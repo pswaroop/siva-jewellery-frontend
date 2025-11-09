@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FaShoppingCart, FaMinus, FaPlus, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
+import logo from '../assets/logo.jpg'; // Import the logo image
 
 const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity, appliedPromo, onApplyPromo, onRemovePromo }) => {
   // Calculate total items in cart
@@ -82,7 +83,7 @@ const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity, applie
     const encodedMessage = encodeURIComponent(cartMessage);
     
     // Open WhatsApp with pre-filled message
-    const whatsappUrl = `https://wa.me/919505492525?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/918977173601?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
     
     // Close cart panel
@@ -95,7 +96,7 @@ const Navbar = ({ cartItems = [], onIncreaseQuantity, onDecreaseQuantity, applie
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="text-2xl font-bold text-amber-800">
-              Siva Jewellery
+              <img src={logo} alt="Siva Jewellery Logo" className="h-16 w-auto" />
             </Link>
           </div>
           

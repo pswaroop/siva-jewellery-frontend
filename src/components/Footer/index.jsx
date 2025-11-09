@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFacebook, FaTwitter, FaInstagram, FaPinterest, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import logo from '../../assets/logo.jpg'; // Import the logo image
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -23,7 +24,7 @@ const Footer = () => {
   const socialLinks = [
     { icon: <FaFacebook className="w-4 h-4" />, url: "#" },
     { icon: <FaTwitter className="w-4 h-4" />, url: "#" },
-    { icon: <FaInstagram className="w-4 h-4" />, url: "#" },
+    { icon: <FaInstagram className="w-4 h-4" />, url: "https://www.instagram.com/siva_jewellerys?igsh=anJkc2UyNno2bTQx&utm_source=qr" },
     { icon: <FaPinterest className="w-4 h-4" />, url: "#" },
   ];
 
@@ -48,10 +49,10 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-white py-8 border-t border-gray-800">
+    <footer className="bg-gray-900 text-white py-12 border-t border-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="flex flex-wrap items-start justify-between gap-8"
+          className="flex flex-wrap items-start justify-between gap-8 mb-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
@@ -59,16 +60,16 @@ const Footer = () => {
         >
           {/* Logo and Description */}
           <motion.div className="w-full sm:w-auto" variants={itemVariants}>
-            <h2 className="text-xl font-bold mb-2">Luxury Jewelry</h2>
+            <img src={logo} alt="Siva Jewellery Logo" className="h-12 w-auto mb-4" />
             <p className="text-gray-400 text-sm mb-4 max-w-xs">
-              Timeless elegance in every piece.
+              Timeless elegance in every piece. Crafting beautiful jewelry since 1995.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social, index) => (
                 <motion.a 
                   key={index}
                   href={social.url} 
-                  className="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-full text-gray-300 hover:bg-amber-600 hover:text-white transition-colors duration-200"
+                  className="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full text-gray-300 hover:bg-amber-600 hover:text-white transition-colors duration-200"
                   whileHover={{ y: -2 }}
                   aria-label={`Follow us on ${social.icon.type.name.replace('Fa', '')}`}
                 >
@@ -81,8 +82,8 @@ const Footer = () => {
           {/* Quick Links - Single Row */}
           <motion.div className="flex flex-wrap gap-8" variants={itemVariants}>
             {links.map((section, sectionIndex) => (
-              <div key={sectionIndex} className="min-w-[120px]">
-                <h3 className="text-sm font-semibold text-white mb-3 pb-1 border-b border-gray-800">
+              <div key={sectionIndex} className="min-w-[140px]">
+                <h3 className="text-sm font-semibold text-white mb-3 pb-1 border-b border-amber-600">
                   {section.title}
                 </h3>
                 <ul className="space-y-2">
@@ -107,31 +108,31 @@ const Footer = () => {
           </motion.div>
 
           {/* Contact Info - Compact */}
-          <motion.div variants={itemVariants} className="min-w-[200px]">
-            <h3 className="text-sm font-semibold text-white mb-3 pb-1 border-b border-gray-800">
+          <motion.div variants={itemVariants} className="min-w-[250px]">
+            <h3 className="text-sm font-semibold text-white mb-3 pb-1 border-b border-amber-600">
               Contact Us
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li className="flex items-start">
-                <FaMapMarkerAlt className="text-amber-400 text-xs mt-1 mr-2 flex-shrink-0" />
-                <span className="text-xs text-gray-400">123 Jewelry St, NY 10001</span>
+                <FaMapMarkerAlt className="text-amber-400 text-sm mt-1 mr-3 flex-shrink-0" />
+                <span className="text-sm text-gray-400">Shivdu Bomma center, Narasaraopet, Palnadu District</span>
               </li>
               <li className="flex items-center">
-                <FaPhone className="text-amber-400 text-xs mr-2" />
+                <FaPhone className="text-amber-400 text-sm mr-3" />
                 <a 
-                  href="tel:+11234567890" 
-                  className="text-xs text-gray-400 hover:text-amber-400 transition-colors duration-200"
+                  href="tel:+918977173601" 
+                  className="text-sm text-gray-400 hover:text-amber-400 transition-colors duration-200"
                 >
-                  +1 (123) 456-7890
+                  +91 89771 73601
                 </a>
               </li>
               <li className="flex items-center">
-                <FaEnvelope className="text-amber-400 text-xs mr-2" />
+                <FaEnvelope className="text-amber-400 text-sm mr-3" />
                 <a 
-                  href="mailto:info@luxuryjewelry.com" 
-                  className="text-xs text-gray-400 hover:text-amber-400 transition-colors duration-200"
+                  href="mailto:info@sivajewellery.com" 
+                  className="text-sm text-gray-400 hover:text-amber-400 transition-colors duration-200"
                 >
-                  info@luxuryjewelry.com
+                  info@sivajewellery.com
                 </a>
               </li>
             </ul>
@@ -140,16 +141,16 @@ const Footer = () => {
 
         {/* Bottom Bar - Single Line */}
         <motion.div 
-          className="border-t border-gray-800 pt-4 mt-6 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left"
+          className="border-t border-gray-800 pt-6 mt-8 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
         >
-          <p className="text-[10px] text-gray-500 mb-2 sm:mb-0">
-            &copy; {currentYear} Luxury Jewelry. All rights reserved.
+          <p className="text-sm text-gray-500 mb-4 sm:mb-0">
+            &copy; {currentYear} Siva Jewellery. All rights reserved.
           </p>
-          <div className="flex space-x-4 text-[10px]">
+          <div className="flex space-x-6 text-sm">
             <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors duration-200">
               Privacy Policy
             </a>

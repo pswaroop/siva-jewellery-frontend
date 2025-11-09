@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { FaWhatsapp, FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 
 const WhatsAppButton = ({ 
-  phoneNumber = '1234567890', 
-  message = 'Hello! I would like to inquire about your jewelry collection.',
+  phoneNumber = '918977173601', 
+  message = 'Hello! I am interested in your beautiful jewelry collection. Could you please provide more details?',
   cartItems = [],
   onIncreaseQuantity,
   onDecreaseQuantity,
@@ -219,7 +219,15 @@ const WhatsAppButton = ({
       
       {/* Main Toggle Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          // If cart has items, send them via WhatsApp
+          // Otherwise, just toggle the cart panel
+          if (cartItems.length > 0) {
+            handleSendToWhatsApp();
+          } else {
+            setIsOpen(!isOpen);
+          }
+        }}
         className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 hover:bg-blue-600 text-white shadow-2xl transition-all duration-300 relative"
         aria-label={isOpen ? 'Close cart' : 'View cart'}
       >

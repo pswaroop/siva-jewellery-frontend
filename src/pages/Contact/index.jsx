@@ -28,26 +28,26 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: <FaPhone className="w-6 h-6" />,
-      title: 'Phone',
-      details: ['+1 (555) 123-4567', '+1 (555) 987-6543'],
-      link: 'tel:+15551234567'
+      title: 'Call Us',
+      details: ['+91 8977173601'],
+      link: 'tel:+91 8977173601'
     },
     {
       icon: <FaEnvelope className="w-6 h-6" />,
-      title: 'Email',
-      details: ['info@sivajewellery.com', 'support@sivajewellery.com'],
-      link: 'mailto:info@sivajewellery.com'
+      title: 'Email Us',
+      details: ['info@shivajewellery.com'],
+      link: 'mailto:info@shivajewellery.com'
     },
     {
       icon: <FaMapMarkerAlt className="w-6 h-6" />,
-      title: 'Address',
-      details: ['123 Jewelry Street', 'New York, NY 10001'],
-      link: 'https://maps.google.com'
+      title: 'Visit Our Store',
+      details: ['123 Jewelry Street', 'Bangalore, Karnataka 560001'],
+      link: 'https://maps.app.goo.gl/3PH9Me85yFJTWsX8A?g_st=iw'
     },
     {
       icon: <FaClock className="w-6 h-6" />,
-      title: 'Business Hours',
-      details: ['Mon - Sat: 10:00 AM - 8:00 PM', 'Sunday: 12:00 PM - 6:00 PM'],
+      title: 'Working Hours',
+      details: ['Monday - Saturday: 10:00 AM - 8:00 PM', 'Sunday: Closed'],
       link: null
     }
   ];
