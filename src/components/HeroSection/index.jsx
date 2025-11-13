@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FaArrowRight, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaArrowRight, FaChevronRight, FaChevronLeft, FaRupeeSign } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const HeroSection = () => {
+const HeroSection = ({ goldRate }) => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -108,6 +108,18 @@ const HeroSection = () => {
             className="absolute inset-0 w-full h-full"
             style={{ background: slides[currentSlide].overlay }}
           />
+          
+          {/* Gold Rate Display */}
+          {goldRate && (
+            <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-5 py-3 rounded-lg flex items-center z-20">
+              <span className="text-base font-medium mr-2">24K Gold:</span>
+              <span className="font-bold flex items-center text-xl">
+                <FaRupeeSign className="text-lg mr-1" />
+                {Math.round(goldRate).toLocaleString('en-IN')}
+                <span className="text-base ml-1">/g</span>
+              </span>
+            </div>
+          )}
           
           {/* Content */}
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-end justify-center h-full pb-16">

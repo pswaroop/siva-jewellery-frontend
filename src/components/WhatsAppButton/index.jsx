@@ -4,7 +4,16 @@ import { FaWhatsapp, FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 
 const WhatsAppButton = ({ 
   phoneNumber = '918977173601', 
-  message = 'Hello! I am interested in your beautiful jewelry collection. Could you please provide more details?',
+  message = `Hello! 👋
+
+I'm interested in your jewelry collection and would like some assistance. Could you please help me with:
+
+• Product recommendations based on my preferences
+• Pricing information
+• Availability of specific items
+• Custom design options
+
+Please let me know the best time to connect. Thank you!`,
   cartItems = [],
   onIncreaseQuantity,
   onDecreaseQuantity,
@@ -63,29 +72,32 @@ const WhatsAppButton = ({
   // Handle send to WhatsApp
   const handleSendToWhatsApp = () => {
     if (cartItems.length === 0) {
-      alert('Your cart is empty. Please add items to cart first.');
+      // If cart is empty, send a general inquiry message with suggestions
+      const generalMessage = `Hello! 👋
+
+I'm interested in your jewelry collection and would like some assistance. Could you please help me with:
+
+• Product recommendations based on my preferences
+• Pricing information
+• Availability of specific items
+• Custom design options
+
+Please let me know the best time to connect. Thank you!`;
+      
+      const encodedMessage = encodeURIComponent(generalMessage);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
       return;
     }
     
-    // Format cart items for WhatsApp message
+    // Format cart items for WhatsApp message (without pricing as per previous requirements)
     let cartMessage = 'Hello! I would like to order the following items:\n\n';
     
     cartItems.forEach((item, index) => {
-      const itemTotal = item.price * item.quantity;
-      cartMessage += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ₹${itemTotal.toLocaleString('en-IN')}\n`;
+      cartMessage += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ${item.grams}\n`;
     });
     
-    cartMessage += `\n━━━━━━━━━━━━━━━━━\n`;
-    cartMessage += `Subtotal: ₹${subtotal.toLocaleString('en-IN')}\n`;
-    
-    if (appliedPromo) {
-      cartMessage += `Promo Code: ${appliedPromo.code}\n`;
-      cartMessage += `Discount: -₹${discount.toLocaleString('en-IN')}\n`;
-    }
-    
-    cartMessage += `Total: ₹${totalPrice.toLocaleString('en-IN')}\n`;
-    cartMessage += `━━━━━━━━━━━━━━━━━\n\n`;
-    cartMessage += `Please confirm availability and provide payment details.`;
+    cartMessage += `\nPlease confirm availability and provide details.`;
     
     // Encode message for URL
     const encodedMessage = encodeURIComponent(cartMessage);
@@ -220,16 +232,16 @@ const WhatsAppButton = ({
       {/* Main Toggle Button */}
       <button
         onClick={() => {
-          // If cart has items, send them via WhatsApp
-          // Otherwise, just toggle the cart panel
+          // Always toggle the cart panel, and if cart has items, also show the send option
           if (cartItems.length > 0) {
-            handleSendToWhatsApp();
-          } else {
             setIsOpen(!isOpen);
+          } else {
+            // If cart is empty, directly send a general inquiry
+            handleSendToWhatsApp();
           }
         }}
-        className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 hover:bg-blue-600 text-white shadow-2xl transition-all duration-300 relative"
-        aria-label={isOpen ? 'Close cart' : 'View cart'}
+        className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-2xl transition-all duration-300 relative"
+        aria-label={isOpen ? 'Close cart' : 'Contact us'}
       >
         <FaWhatsapp className="w-9 h-9" />
         {totalItems > 0 && (
