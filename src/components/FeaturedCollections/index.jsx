@@ -19,7 +19,6 @@ const FeaturedCollections = ({
       setCurrentImageIndex(prev => {
         const updated = { ...prev };
         collections.forEach(item => {
-          // If product has multiple images, cycle through them
           if (item.images && item.images.length > 1) {
             const currentIndex = prev[item.id] || 0;
             updated[item.id] = (currentIndex >= item.images.length - 1) ? 0 : currentIndex + 1;
@@ -76,8 +75,6 @@ const FeaturedCollections = ({
       ],
       sizes: ['One Size']
     },
-    
-    // Earrings
     {
       id: 4,
       name: 'Diamond Stud Earrings',
@@ -121,8 +118,6 @@ const FeaturedCollections = ({
       sizes: ['One Size'],
       textAlign: 'center'
     },
-    
-    // Neck & Chest Jewellery
     {
       id: 7,
       name: 'Pearl Necklace',
@@ -163,19 +158,10 @@ const FeaturedCollections = ({
         'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
         'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
       ],
+      sizes: ['16 inches', '18 inches']
     },
-    
-    // Arm & Hand Jewellery
-    // {
-    //   id: 10,
-    //   name: 'Gold Bangle Set',
-    //   count: '6 items',
-    //   category: 'Bracelets',
-    //   price: 39999,
-    //   image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fgirirajjewellers.co.in%2Fbangles-bracelets%2F22k-gold-bangles%2Ffairytale-wedding-gold-bangles%3Fsrsltid%3DAfmBOooMM-ekM_LXnMusg8uGjkjxG-LG0o-f7Frgbb_HvoJx_mbg3j0f&psig=AOvVaw2DzxHcNyXjRUDE4Mf0e_po&ust=1762715255153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNDN25eg45ADFQAAAAAdAAAAABAE',
-    // },
     {
-      id: 11,
+      id: 10,
       name: 'Silver Cuff Bracelet',
       count: '11 items',
       category: 'Bracelets',
@@ -186,11 +172,10 @@ const FeaturedCollections = ({
         'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
         'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
       ],
+      sizes: ['Small', 'Medium', 'Large']
     },
-    
-    // Finger Jewellery
     {
-      id: 12,
+      id: 11,
       name: 'Engagement Ring',
       count: '18 items',
       category: 'Rings',
@@ -201,79 +186,85 @@ const FeaturedCollections = ({
         'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
         'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
       ],
+      sizes: ['US 4', 'US 5', 'US 6', 'US 7', 'US 8', 'US 9']
     },
     {
-      id: 13,
-      name: 'Cocktail Rings',
+      id: 12,
+      name: 'Cocktail Ring',
       count: '22 items',
       category: 'Rings',
-      price: 8999,
-      grams: '5g',
+      price: 15999,
+      grams: '10g',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
       images: [
         'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
         'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
       ],
+      sizes: ['US 5', 'US 6', 'US 7', 'US 8', 'US 9']
     },
-    
-    // Feet Jewellery
+    {
+      id: 13,
+      name: 'Diamond Tennis Bracelet',
+      count: '6 items',
+      category: 'Bracelets',
+      price: 59999,
+      grams: '18g',
+      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
+      images: [
+        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
+        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
+      ],
+      sizes: ['6 inches', '7 inches', '8 inches']
+    },
     {
       id: 14,
-      name: 'Anklet Collection',
-      count: '13 items',
-      category: 'Feet Jewellery',
-      price: 5999,
-      grams: '10g',
+      name: 'Gold Bangle Set',
+      count: '8 items',
+      category: 'Bangles',
+      price: 45999,
+      grams: '35g',
+      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
+      images: [
+        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
+        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
+      ],
+      sizes: ['Small', 'Medium', 'Large']
+    },
+    {
+      id: 15,
+      name: 'Pearl Drop Earrings',
+      count: '12 items',
+      category: 'Earrings',
+      price: 18999,
+      grams: '8g',
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
       images: [
         'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-    },
-    
-    // Body & Waist Jewellery
-    {
-      id: 15,
-      name: 'Waist Chain',
-      count: '8 items',
-      category: 'Body Jewellery',
-      price: 7999,
-      grams: '15g',
-      image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
         'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
       ],
-    },
-    
-    // Nose Jewellery
-    // {
-    //   id: 16,
-    //   name: 'Nose Rings',
-    //   count: '16 items',
-    //   category: 'Nose Jewellery',
-    //   price: 3999,
-    //   image: 'https://images.unsplash.com/photo-1535632066927-ab6c9ed70e39?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-    // },
+      sizes: ['One Size']
+    }
   ];
 
-  // Filter collections based on search term
-  const filteredCollections = collections.filter(item => {
-    // If there's a search term, check if it matches name, category, or tags
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        item.name.toLowerCase().includes(searchLower) ||
-        item.category.toLowerCase().includes(searchLower) ||
-        (item.tags && item.tags.some(tag => 
-          tag.toLowerCase().includes(searchLower)
-        ))
-      );
-    }
-    // If no search term, show all collections
-    return true;
-  });
-  
+  // Filter collections based on search term and featured status
+  const filteredCollections = collections
+    .filter(item => {
+      // If there's a search term, check if it matches name, category, or tags
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          item.name.toLowerCase().includes(searchLower) ||
+          item.category.toLowerCase().includes(searchLower) ||
+          (item.tags && item.tags.some(tag => 
+            tag.toLowerCase().includes(searchLower)
+          ))
+        );
+      }
+      return true;
+    })
+    // If showOnlyFeatured is true, take only first 4 items
+    .filter((item, index) => !showOnlyFeatured || index < 4);
+
   const features = [
     {
       title: 'Premium Quality',
@@ -401,7 +392,14 @@ const FeaturedCollections = ({
                 <div className="p-5 flex-grow flex flex-col">
                   <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors text-center">{item.name}</h3>
                   <div className="text-center mb-4">
-                    <div className="text-lg font-bold text-amber-700">{item.grams}</div>
+                    <div className="text-lg font-bold text-amber-700">₹{item.price.toLocaleString()}</div>
+                    <div className="text-sm text-gray-500">{item.grams}</div>
+                    {item.sizes && item.sizes.length > 0 && (
+                      <div className="mt-2">
+                        <span className="text-xs font-medium text-gray-500">Sizes: </span>
+                        <span className="text-xs text-gray-600">{item.sizes.join(', ')}</span>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Add to Cart Button */}
@@ -418,18 +416,17 @@ const FeaturedCollections = ({
           </motion.div>
         )}
         
-        {/* Explore All Button */}
-      {showOnlyFeatured && (
-  <div className="text-center">
-    <Link 
-      to="/collections" 
-      className="inline-block bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-    >
-      Explore All Collections
-    </Link>
-  </div>
-)}
-    
+        {/* Explore All Button - Only show when in featured mode */}
+        {showOnlyFeatured && (
+          <div className="text-center">
+            <Link 
+              to="/collections" 
+              className="inline-block bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            >
+              Explore All Collections
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
