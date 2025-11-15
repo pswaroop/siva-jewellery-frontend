@@ -41,8 +41,8 @@ const Contact = () => {
     {
       icon: <FaMapMarkerAlt className="w-6 h-6" />,
       title: 'Visit Our Store',
-      details: ['123 Jewelry Street', 'Bangalore, Karnataka 560001'],
-      link: 'https://maps.app.goo.gl/3PH9Me85yFJTWsX8A?g_st=iw'
+      details: ['123 Shivdu Bomma center' , 'Narasaraopet', 'Palnadu district Street'],
+      link: 'https://maps.app.goo.gl/6pNhokXW4LNnMoEr8?g_st=iw'
     },
     {
       icon: <FaClock className="w-6 h-6" />,
@@ -213,7 +213,7 @@ const Contact = () => {
           >
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1841374555494!2d-73.98823492346474!3d40.75889097138558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3830.6872071400053!2d80.0521929!3d16.236512599999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4a816b1d7eb74d%3A0x18b35744048290a5!2sSiva%20Jewellerys%20%26%20Diamonds!5e0!3m2!1sen!2sin!4v1763178376012!5m2!1sen!2sin"
                 width="100%"
                 height="450"
                 style={{ border: 0 }}
@@ -222,6 +222,7 @@ const Contact = () => {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Store Location"
               ></iframe>
+              
             </div>
           </motion.div>
         </div>

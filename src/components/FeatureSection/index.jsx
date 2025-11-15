@@ -6,7 +6,7 @@ const FeatureSection = () => {
     {
       icon: <FaGem className="w-8 h-8 mx-auto text-amber-600" />,
       title: 'Premium Quality',
-      description: 'Only the finest materials and craftsmanship',
+      description: '100% certified quality with only BIS Hallmarked Jewellery',
     },
     {
       icon: <FaHandsHelping className="w-8 h-8 mx-auto text-amber-600" />,

@@ -1,341 +1,239 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { FaGem, FaHandsHelping, FaShieldAlt, FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+const API_BASE_URL = 'https://sivajewellerysanddiamonds.com/api';
 
 const FeaturedCollections = ({ 
   showOnlyFeatured = false, 
   updateCartItems, 
   cartItems = [],
-  searchTerm = ''
+  searchTerm = '',
+  selectedCategory = 'All'
 }) => {
-  // State to track current image index for each product
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [imagesLoaded, setImagesLoaded] = useState({});
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Fetch products from Django API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Use latest_featured endpoint if showing only featured, otherwise get all
+        const endpoint = showOnlyFeatured 
+          ? `${API_BASE_URL}/products/latest_featured/`
+          : `${API_BASE_URL}/products/`;
+        
+        const response = await axios.get(endpoint, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000, // 10 second timeout
+        });
+        
+        // Transform Django API response to match component structure
+        const transformedProducts = response.data.map(product => ({
+          id: product.id,
+          product_id: product.product_id,
+          name: product.product_name,
+          category: product.category_details?.category || 'Uncategorized',
+          categorySlug: product.category_details?.slug || '',
+          categoryId: product.category,
+          size: product.size || 'One Size',
+          image: product.image1,
+          images: [
+            product.image1,
+            product.image2 || product.image1
+          ].filter(Boolean),
+          sizes: product.size ? [product.size] : ['One Size'],
+          created_at: product.created_at
+        }));
+        
+        setProducts(transformedProducts);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError(err.response?.data?.message || err.message || 'Failed to fetch products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [showOnlyFeatured]); // Re-fetch when showOnlyFeatured changes
   
   // Auto-slide images every 3 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => {
-        const updated = { ...prev };
-        collections.forEach(item => {
-          if (item.images && item.images.length > 1) {
-            const currentIndex = prev[item.id] || 0;
-            updated[item.id] = (currentIndex >= item.images.length - 1) ? 0 : currentIndex + 1;
-          }
-        });
-        return updated;
-      });
-    }, 3000);
+    if (products.length === 0) return;
     
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setCurrentImageIndex(prev => {
+          const updated = { ...prev };
+          products.forEach(item => {
+            if (item.images && item.images.length > 1) {
+              const currentIndex = prev[item.id] || 0;
+              updated[item.id] = (currentIndex >= item.images.length - 1) ? 0 : currentIndex + 1;
+            }
+          });
+          return updated;
+        });
+      }, 3000);
+      
+      return () => clearInterval(interval);
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [products]);
 
-  const collections = [
-    // Head & Hair Jewellery
-    {
-      id: 1,
-      name: 'Diamond Tiara',
-      count: '5 items',
-      category: 'Head & Hair',
-      price: 45999,
-      grams: '25g',
-      image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size']
-    },
-    {
-      id: 2,
-      name: 'Maang Tikka',
-      count: '12 items',
-      category: 'Head & Hair',
-      price: 25999,
-      grams: '18g',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size']
-    },
-    {
-      id: 3,
-      name: 'Hair Comb Set',
-      count: '8 items',
-      category: 'Head & Hair',
-      price: 12999,
-      grams: '12g',
-      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://d25g9z9s77rn4i.cloudfront.net/uploads/product/1129/1661258687_692158ae086ac8038896.png'
-      ],
-      sizes: ['One Size']
-    },
-    {
-      id: 4,
-      name: 'Diamond Stud Earrings',
-      count: '15 items',
-      category: 'Earrings',
-      price: 18999,
-      grams: '5g',
-      image: 'https://d25g9z9s77rn4i.cloudfront.net/uploads/product/1129/1661258687_692158ae086ac8038896.png',
-      images: [
-        'https://d25g9z9s77rn4i.cloudfront.net/uploads/product/1129/1661258687_692158ae086ac8038896.png',
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size']
-    },
-    {
-      id: 5,
-      name: 'Gold Jhumkas',
-      count: '10 items',
-      category: 'Earrings',
-      price: 22999,
-      grams: '15g',
-      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size']
-    },
-    {
-      id: 6,
-      name: 'Hoop Earrings',
-      count: '20 items',
-      category: 'Earrings',
-      price: 8999,
-      grams: '8g',
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size'],
-      textAlign: 'center'
-    },
-    {
-      id: 7,
-      name: 'Pearl Necklace',
-      count: '7 items',
-      category: 'Necklace',
-      price: 34999,
-      grams: '30g',
-      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['16 inches', '18 inches', '20 inches']
-    },
-    {
-      id: 8,
-      name: 'Mangalsutra',
-      count: '14 items',
-      category: 'Necklace',
-      price: 28999,
-      grams: '22g',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['16 inches', '18 inches', '20 inches']
-    },
-    {
-      id: 9,
-      name: 'Choker Necklace',
-      count: '9 items',
-      category: 'Necklace',
-      price: 15999,
-      grams: '18g',
-      image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['16 inches', '18 inches']
-    },
-    {
-      id: 10,
-      name: 'Silver Cuff Bracelet',
-      count: '11 items',
-      category: 'Bracelets',
-      price: 12999,
-      grams: '20g',
-      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['Small', 'Medium', 'Large']
-    },
-    {
-      id: 11,
-      name: 'Engagement Ring',
-      count: '18 items',
-      category: 'Rings',
-      price: 49999,
-      grams: '7g',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['US 4', 'US 5', 'US 6', 'US 7', 'US 8', 'US 9']
-    },
-    {
-      id: 12,
-      name: 'Cocktail Ring',
-      count: '22 items',
-      category: 'Rings',
-      price: 15999,
-      grams: '10g',
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['US 5', 'US 6', 'US 7', 'US 8', 'US 9']
-    },
-    {
-      id: 13,
-      name: 'Diamond Tennis Bracelet',
-      count: '6 items',
-      category: 'Bracelets',
-      price: 59999,
-      grams: '18g',
-      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['6 inches', '7 inches', '8 inches']
-    },
-    {
-      id: 14,
-      name: 'Gold Bangle Set',
-      count: '8 items',
-      category: 'Bangles',
-      price: 45999,
-      grams: '35g',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['Small', 'Medium', 'Large']
-    },
-    {
-      id: 15,
-      name: 'Pearl Drop Earrings',
-      count: '12 items',
-      category: 'Earrings',
-      price: 18999,
-      grams: '8g',
-      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-      images: [
-        'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90',
-        'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90'
-      ],
-      sizes: ['One Size']
+  // Filter products based on category and search term
+  const filteredCollections = useMemo(() => {
+    let filtered = products;
+    
+    // Filter by category
+    if (selectedCategory && selectedCategory !== 'All') {
+      filtered = filtered.filter(item => item.category === selectedCategory);
     }
-  ];
+    
+    // Filter by search term
+    if (searchTerm && searchTerm.trim() !== '') {
+      const searchLower = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(item => {
+        const nameLower = item.name.toLowerCase();
+        const categoryLower = item.category.toLowerCase();
+        const productIdLower = item.product_id.toLowerCase();
+        return nameLower.includes(searchLower) || 
+               categoryLower.includes(searchLower) || 
+               productIdLower.includes(searchLower);
+      });
+    }
+    
+    // If showOnlyFeatured and we got all products, limit to 4
+    if (showOnlyFeatured && filtered.length > 4) {
+      filtered = filtered.slice(0, 4);
+    }
+    
+    return filtered;
+  }, [products, selectedCategory, searchTerm, showOnlyFeatured]);
 
-  // Filter collections based on search term and featured status
-  const filteredCollections = collections
-    .filter(item => {
-      // If there's a search term, check if it matches name, category, or tags
-      if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase();
-        return (
-          item.name.toLowerCase().includes(searchLower) ||
-          item.category.toLowerCase().includes(searchLower) ||
-          (item.tags && item.tags.some(tag => 
-            tag.toLowerCase().includes(searchLower)
-          ))
-        );
-      }
-      return true;
-    })
-    // If showOnlyFeatured is true, take only first 4 items
-    .filter((item, index) => !showOnlyFeatured || index < 4);
-
-  const features = [
-    {
-      title: 'Premium Quality',
-      description: 'Only the finest materials and craftsmanship',
-      icon: <FaGem className="w-8 h-8 text-amber-600" />,
-    },
-    {
-      title: 'Expert Craftsmanship',
-      description: 'Handcrafted by skilled artisans',
-      icon: <FaHandsHelping className="w-8 h-8 text-amber-600" />,
-    },
-    {
-      title: 'Secure Shopping',
-      description: 'Safe and secure online transactions',
-      icon: <FaShieldAlt className="w-8 h-8 text-amber-600" />,
-    },
-  ];
-
-  const containerVariants = {
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.1,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+  const itemVariants = useMemo(() => ({
+    hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.3 },
     },
-  };
+  }), []);
 
-  // Handle add to cart functionality
-  const handleAddToCart = (item) => {
-    // Check if item is already in cart
-    const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+  // const handleAddToCart = useCallback((item) => {
+  //   const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
     
-    let newCartItems;
-    if (existingItem) {
-      // If item exists, update quantity
-      newCartItems = cartItems.map(cartItem => 
-        cartItem.id === item.id 
-          ? { ...cartItem, quantity: cartItem.quantity + 1 } 
-          : cartItem
-      );
-    } else {
-      // If item doesn't exist, add to cart with quantity 1
-      newCartItems = [...cartItems, { ...item, quantity: 1 }];
-    }
+  //   let newCartItems;
+  //   if (existingItem) {
+  //     newCartItems = cartItems.map(cartItem => 
+  //       cartItem.id === item.id 
+  //         ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+  //         : cartItem
+  //     );
+  //   } else {
+  //     newCartItems = [...cartItems, { ...item, quantity: 1 }];
+  //   }
     
-    // Update cart items in parent component
-    if (updateCartItems) {
-      updateCartItems(newCartItems);
-    }
+  //   if (updateCartItems) {
+  //     updateCartItems(newCartItems);
+  //   }
+  // }, [cartItems, updateCartItems]);
+const handleAddToCart = useCallback((item) => {
+  const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+  
+  // FIXED: Ensure size has a proper display value before adding to cart
+  const itemWithSize = {
+    ...item,
+    size: item.size && item.size.trim() !== '' && item.size !== 'One Size' 
+      ? item.size 
+      : 'Standard Size' // Better than N/A
   };
+  
+  let newCartItems;
+  if (existingItem) {
+    newCartItems = cartItems.map(cartItem => 
+      cartItem.id === item.id 
+        ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+        : cartItem
+    );
+  } else {
+    newCartItems = [...cartItems, { ...itemWithSize, quantity: 1 }];
+  }
+  
+  if (updateCartItems) {
+    updateCartItems(newCartItems);
+  }
+}, [cartItems, updateCartItems]);
+
+  const handleImageLoad = useCallback((itemId) => {
+    setImagesLoaded(prev => ({ ...prev, [itemId]: true }));
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <h3 className="text-xl font-medium text-red-600 mb-4">
+              Error loading products: {error}
+            </h3>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <motion.div 
           className="text-center max-w-3xl mx-auto mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4 }}
         >
           <span className="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
             Our Collections
@@ -349,63 +247,72 @@ const FeaturedCollections = ({
           </p>
         </motion.div>
 
-        {/* Collections Grid */}
         {filteredCollections.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-xl font-medium text-gray-600">
-              {searchTerm 
-                ? `No items found matching "${searchTerm}"`
-                : 'No collections available.'
-              }
+              No items found
+              {selectedCategory && selectedCategory !== 'All' && ` in ${selectedCategory}`}
+              {searchTerm && ` matching "${searchTerm}"`}
             </h3>
           </div>
         ) : (
           <motion.div 
+            key={`${selectedCategory}-${searchTerm}`}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            animate="visible"
           >
-            {filteredCollections.map((item) => (
+            {filteredCollections.map((item, index) => (
               <motion.div 
                 key={item.id}
                 className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full border border-gray-100"
                 variants={itemVariants}
               >
-                <div className="relative h-56 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
-                  <div className="w-full h-full">
-                    <img 
-                      src={item.images && item.images.length > 0 
-                        ? item.images[currentImageIndex[item.id] || 0] 
-                        : item.image} 
-                      alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                  </div>
-                  <span className="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                <div className="relative h-56 sm:h-48 md:h-56 lg:h-64 overflow-hidden bg-gray-100">
+                  {!imagesLoaded[item.id] && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="animate-pulse bg-gray-200 w-full h-full"></div>
+                    </div>
+                  )}
+                  
+                  <img 
+                    src={item.images && item.images.length > 0 
+                      ? item.images[currentImageIndex[item.id] || 0] 
+                      : item.image} 
+                    alt={item.name}
+                    className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                      imagesLoaded[item.id] ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    loading={index < 4 ? "eager" : "lazy"}
+                    decoding="async"
+                    onLoad={() => handleImageLoad(item.id)}
+                    width="400"
+                    height="400"
+                  />
+                  
+                  <span className="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg z-10">
                     {item.category}
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <div className="p-5 flex-grow flex flex-col">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors text-center">{item.name}</h3>
-                  <div className="text-center mb-4">
-                    <div className="text-lg font-bold text-amber-700">₹{item.price.toLocaleString()}</div>
-                    <div className="text-sm text-gray-500">{item.grams}</div>
-                    {item.sizes && item.sizes.length > 0 && (
-                      <div className="mt-2">
-                        <span className="text-xs font-medium text-gray-500">Sizes: </span>
-                        <span className="text-xs text-gray-600">{item.sizes.join(', ')}</span>
-                      </div>
-                    )}
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors text-center">
+                    {item.name}
+                  </h3>
+                  {/* <div className="text-center mb-2">
+                    <div className="text-sm text-gray-500">ID: {item.product_id}</div>
+                  </div> */}
+                  {item.size && item.size !== 'One Size' && (
+                    <div className="text-center mb-4">
+                      <div className="text-sm font-medium text-amber-700">{item.size}</div>
+                    </div>
+                  )}
                   
-                  {/* Add to Cart Button */}
                   <button 
                     onClick={() => handleAddToCart(item)}
-                    className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                    className="mt-auto w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                    aria-label={`Add ${item.name} to cart`}
                   >
                     <FaShoppingCart className="w-4 h-4" />
                     Add to Cart
@@ -416,8 +323,7 @@ const FeaturedCollections = ({
           </motion.div>
         )}
         
-        {/* Explore All Button - Only show when in featured mode */}
-        {showOnlyFeatured && (
+        {showOnlyFeatured && products.length > 4 && (
           <div className="text-center">
             <Link 
               to="/collections" 
@@ -432,18 +338,19 @@ const FeaturedCollections = ({
   );
 };
 
-// Add PropTypes validation
 FeaturedCollections.propTypes = {
   showOnlyFeatured: PropTypes.bool,
   updateCartItems: PropTypes.func.isRequired,
   cartItems: PropTypes.array,
   searchTerm: PropTypes.string,
+  selectedCategory: PropTypes.string,
 };
 
 FeaturedCollections.defaultProps = {
   showOnlyFeatured: false,
   cartItems: [],
   searchTerm: '',
+  selectedCategory: 'All',
 };
 
 export default FeaturedCollections;

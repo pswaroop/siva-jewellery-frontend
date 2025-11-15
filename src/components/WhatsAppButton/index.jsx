@@ -4,7 +4,7 @@ import { FaWhatsapp, FaMinus, FaPlus, FaTimes } from 'react-icons/fa';
 
 const WhatsAppButton = ({ 
   phoneNumber = '918977173601', 
-  message = `Hello! 👋
+  message = `Hello!
 
 I'm interested in your jewelry collection and would like some assistance. Could you please help me with:
 
@@ -25,7 +25,6 @@ Please let me know the best time to connect. Thank you!`,
   const [isOpen, setIsOpen] = useState(false);
   const [promoInput, setPromoInput] = useState('');
   const [promoMessage, setPromoMessage] = useState('');
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   // Calculate total items in cart
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -72,8 +71,8 @@ Please let me know the best time to connect. Thank you!`,
   // Handle send to WhatsApp
   const handleSendToWhatsApp = () => {
     if (cartItems.length === 0) {
-      // If cart is empty, send a general inquiry message with suggestions
-      const generalMessage = `Hello! 👋
+      // If cart is empty, send a general inquiry message
+      const generalMessage = `Hello!
 
 I'm interested in your jewelry collection and would like some assistance. Could you please help me with:
 
@@ -90,14 +89,28 @@ Please let me know the best time to connect. Thank you!`;
       return;
     }
     
-    // Format cart items for WhatsApp message (without pricing as per previous requirements)
+    // Format cart items for WhatsApp message
     let cartMessage = 'Hello! I would like to order the following items:\n\n';
     
     cartItems.forEach((item, index) => {
-      cartMessage += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ${item.grams}\n`;
+      // FIXED: Use item.size with proper fallback (same as Navbar cart)
+      const displaySize = item.size && item.size.trim() !== '' && item.size !== 'One Size'
+        ? item.size
+        : 'Standard Size';
+      
+      cartMessage += `${index + 1}. ${item.name}\n`;
+      cartMessage += `   Size: ${displaySize}\n`;
+      cartMessage += `   Quantity: ${item.quantity}\n\n`;
+      //Add product ID if available
+      if (item.product_id) {
+        cartMessage += `   Product ID: ${item.product_id}\n`;
+      }
     });
     
-    cartMessage += `\nPlease confirm availability and provide details.`;
+    cartMessage += `━━━━━━━━━━━━━━━━━\n`;
+    cartMessage += `Total Items: ${totalItems}\n\n`;
+    cartMessage += `Please confirm availability and provide payment details.\n`;
+    cartMessage += `Thank you!`;
     
     // Encode message for URL
     const encodedMessage = encodeURIComponent(cartMessage);
@@ -113,7 +126,9 @@ Please let me know the best time to connect. Thank you!`;
       {isOpen && cartItems.length > 0 && (
         <div className="bg-white rounded-lg shadow-xl p-4 mb-4 flex flex-col space-y-3 w-80 max-h-96 overflow-y-auto">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-gray-800 font-semibold text-lg">Your Cart ({totalItems} items)</h3>
+            <h3 className="text-gray-800 font-semibold text-lg">
+              Your Cart ({totalItems} {totalItems === 1 ? 'item' : 'items'})
+            </h3>
             <button 
               onClick={() => setIsOpen(false)}
               className="text-gray-500 hover:text-red-500 transition-colors p-1 -mr-1"
@@ -126,17 +141,24 @@ Please let me know the best time to connect. Thank you!`;
           {/* Cart Items */}
           <div className="space-y-3">
             {cartItems.map((item) => {
-              const itemTotal = item.price * item.quantity;
+              // FIXED: Display size with proper fallback (same as Navbar)
+              const displaySize = item.size && item.size.trim() !== '' && item.size !== 'One Size'
+                ? item.size
+                : 'Standard Size';
+              
               return (
-                <div key={item.id} className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <div className="flex-1">
-                    <h4 className="text-gray-800 font-medium text-sm">{item.name}</h4>
-                    <p className="text-amber-600 font-semibold text-sm">₹{itemTotal.toLocaleString('en-IN')}</p>
+                <div key={item.id} className="flex justify-between items-center pb-3 border-b border-gray-100">
+                  <div className="flex-1 pr-2">
+                    <h4 className="text-gray-800 font-medium text-sm mb-1">{item.name}</h4>
+                    {/* FIXED: Show size instead of price */}
+                    <p className="text-amber-600 font-semibold text-sm">
+                      {displaySize}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <button 
                       onClick={() => onDecreaseQuantity && onDecreaseQuantity(item.id)}
-                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-amber-600 hover:bg-amber-50 font-bold text-lg"
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-amber-600 hover:bg-amber-50 transition-colors"
                       aria-label="Decrease quantity"
                     >
                       <FaMinus className="w-3 h-3" />
@@ -144,7 +166,7 @@ Please let me know the best time to connect. Thank you!`;
                     <span className="font-semibold text-gray-800 w-8 text-center">{item.quantity}</span>
                     <button 
                       onClick={() => onIncreaseQuantity && onIncreaseQuantity(item.id)}
-                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-amber-600 hover:bg-amber-50 font-bold text-lg"
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-amber-600 hover:bg-amber-50 transition-colors"
                       aria-label="Increase quantity"
                     >
                       <FaPlus className="w-3 h-3" />
@@ -155,72 +177,11 @@ Please let me know the best time to connect. Thank you!`;
             })}
           </div>
           
-          {/* Promo Code Section */}
-          <div className="pt-2 pb-2 border-t border-gray-200">
-            {!appliedPromo ? (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Have a promo code?</label>
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    value={promoInput}
-                    onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                    placeholder="Enter code"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
-                    onKeyPress={(e) => e.key === 'Enter' && handleApplyPromo()}
-                  />
-                  <button
-                    onClick={handleApplyPromo}
-                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm transition-colors"
-                  >
-                    Apply
-                  </button>
-                </div>
-                {promoMessage && (
-                  <p className={`mt-2 text-xs ${promoMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
-                    {promoMessage}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-semibold text-green-800">{appliedPromo.code}</p>
-                    <p className="text-xs text-green-600">{appliedPromo.description}</p>
-                  </div>
-                  <button
-                    onClick={handleRemovePromo}
-                    className="text-red-500 hover:text-red-700 text-xs font-medium"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          {/* Total and Send Button */}
+          {/* Send Button */}
           <div className="pt-3 border-t border-gray-200">
-            <div className="space-y-2 mb-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="text-gray-800">₹{subtotal.toLocaleString('en-IN')}</span>
-              </div>
-              {appliedPromo && (
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-green-600">Discount:</span>
-                  <span className="text-green-600">-₹{discount.toLocaleString('en-IN')}</span>
-                </div>
-              )}
-              <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                <span className="font-semibold text-gray-800">Total:</span>
-                <span className="font-bold text-lg text-amber-700">₹{totalPrice.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
             <button
               onClick={handleSendToWhatsApp}
-              className="w-full flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-all duration-300 shadow-md"
+              className="w-full flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <FaWhatsapp className="w-5 h-5 mr-2" />
               Send Order via WhatsApp
@@ -229,24 +190,23 @@ Please let me know the best time to connect. Thank you!`;
         </div>
       )}
       
-      {/* Main Toggle Button */}
+      {/* Main WhatsApp Button */}
       <button
         onClick={() => {
-          // Always toggle the cart panel, and if cart has items, also show the send option
+          // If cart has items, toggle the panel. Otherwise, send general inquiry
           if (cartItems.length > 0) {
             setIsOpen(!isOpen);
           } else {
-            // If cart is empty, directly send a general inquiry
             handleSendToWhatsApp();
           }
         }}
-        className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-2xl transition-all duration-300 relative"
-        aria-label={isOpen ? 'Close cart' : 'Contact us'}
+        className="flex items-center justify-center w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-2xl transition-all duration-300 hover:scale-110 relative"
+        aria-label={cartItems.length > 0 ? (isOpen ? 'Close cart' : 'Open cart') : 'Contact us on WhatsApp'}
       >
         <FaWhatsapp className="w-9 h-9" />
         {totalItems > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
-            {totalItems > 4 ? '4+' : totalItems}
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold shadow-lg">
+            {totalItems > 9 ? '9+' : totalItems}
           </span>
         )}
       </button>

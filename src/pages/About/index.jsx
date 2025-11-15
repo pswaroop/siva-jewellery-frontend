@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaGem, FaAward, FaHeart, FaUsers, FaShieldAlt, FaStar } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 const About = () => {
   const values = [
     {
       icon: <FaGem className="w-8 h-8" />,
       title: 'Premium Quality',
-      description: 'Only the finest materials and craftsmanship in every piece we create.'
+      description: '100% certified quality with only BIS Hallmarked Jewellery'
     },
     {
       icon: <FaAward className="w-8 h-8" />,
@@ -37,7 +37,7 @@ const About = () => {
   ];
 
   const stats = [
-    { number: '25+', label: 'Years of Excellence' },
+    { number: '10+', label: 'Years of Excellence' },
     { number: '10,000+', label: 'Happy Customers' },
     { number: '500+', label: 'Unique Designs' },
     { number: '100%', label: 'Satisfaction Rate' }
@@ -68,7 +68,7 @@ const About = () => {
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mb-8 rounded-full"></div>
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8">
-              Welcome to Siva Jewellery, where tradition meets innovation. For over 25 years, we have been crafting exquisite jewelry pieces that celebrate life's most precious moments.
+              Welcome to Venkata Samba Siva Jewellery, where tradition meets innovation. For over more than 10 years, we have been crafting exquisite jewelry pieces that celebrate life's most precious moments.
             </p>
           </motion.div>
         </div>
@@ -111,14 +111,26 @@ const About = () => {
               <div className="w-20 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mb-12 rounded-full"></div>
               
               <div className="space-y-6 text-gray-700 leading-relaxed">
-                <p className="text-lg">
-                  Founded in 1998, Siva Jewellery began as a small family workshop with a passion for creating beautiful, meaningful jewelry. What started as a dream has grown into a trusted name in fine jewelry, serving thousands of satisfied customers across the region.
+                <p className="text-lg text-justify">
+                  Venkata Samba Siva Jewellerys & Diamonds – A name synonymous with trust, purity, and timeless beauty since 2013
+
                 </p>
-                <p className="text-lg">
-                  Our master craftsmen combine time-honored techniques with contemporary design sensibilities to create pieces that are both classic and modern. Each piece is meticulously crafted with attention to every detail, ensuring that it becomes a treasured heirloom for generations to come.
+                <p className="text-lg text-justify">
+                  With over 12 years of excellence, we’ve been committed to delivering jewellery that reflects tradition, craftsmanship, and authenticity. We exclusively offer BIS Hallmarked jewellery, ensuring the highest standards of purity and quality.
                 </p>
-                <p className="text-lg">
-                  We believe that jewelry is more than just an accessory—it's a symbol of love, celebration, and personal expression. Whether you're marking a milestone, expressing your style, or finding the perfect gift, we're here to help you discover pieces that resonate with your story.
+                <p className="text-lg text-justify">
+                  We specialize in custom-made jewellery, crafted to suit your unique taste and style. From timeless Bengali work and plain harams to elegant casting necklaces, vaddanams, vankis, pachi work harams, chandbalis, jumkis, and lockets — every piece is a work of art. Our extensive collection also includes bridal sets, antique items, rings, bangles, bracelets, kadiyams, and dazzling diamond jewellery.
+                </p>
+                <p className="text-lg text-justify">
+                  Every ornament tells a story — of culture, celebration, and elegance.
+Your search for excellence ends here. Looking for silver? We also offer a beautiful selection of silver articles for both traditional and modern needs.
+                </p>
+                <p className="text-lg text-center">
+                  Why Choose Us?<br/><br/>
+                      💎 100% Certified Quality<br/>
+                      🔖 Only BIS Hallmarked Jewellery<br/>
+                      🔒 Trusted by Generations<br/>
+                      🌟 Unmatched Craftsmanship
                 </p>
               </div>
             </motion.div>
@@ -188,12 +200,13 @@ const About = () => {
               Experience our collections in person and let our experts help you find the perfect piece. We're here to make your jewelry dreams come true.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors duration-300 shadow-lg">
+              <a href="/contact" className="bg-white text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors duration-300 shadow-lg">
                 Book Appointment
-              </button>
-              <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-amber-600 transition-all duration-300">
-                Contact Us
-              </button>
+              </a>
+             
+              <a href="/contact" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-amber-600 transition-all duration-300">
+    Contact Us
+</a>
             </div>
           </motion.div>
         </div>

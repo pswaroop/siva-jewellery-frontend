@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFacebook, FaTwitter, FaInstagram, FaPinterest, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram, FaPinterest, FaMapMarkerAlt, FaPhone, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import logo from '../../assets/logo.jpg'; // Import the logo image
 
@@ -22,10 +22,10 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaFacebook className="w-4 h-4" />, url: "#" },
-    { icon: <FaTwitter className="w-4 h-4" />, url: "#" },
+    { icon: <FaFacebook className="w-4 h-4" />, url: "https://www.facebook.com/share/16YHTtohCM/?mibextid=wwXIfr" },
+    { icon: <FaWhatsapp className="w-4 h-4" />, url: "https://wa.me/+918977173601?text=%27Hii%27" },
     { icon: <FaInstagram className="w-4 h-4" />, url: "https://www.instagram.com/siva_jewellerys?igsh=anJkc2UyNno2bTQx&utm_source=qr" },
-    { icon: <FaPinterest className="w-4 h-4" />, url: "#" },
+    { icon: <FaPhone className="w-4 h-4" />, url: "tel:+918977173601" },
   ];
 
   const containerVariants = {
@@ -61,8 +61,11 @@ const Footer = () => {
           {/* Logo and Description */}
           <motion.div className="w-full sm:w-auto" variants={itemVariants}>
             <img src={logo} alt="Siva Jewellery Logo" className="h-12 w-auto mb-4" />
+            <p className="text-white text-sm mb-4 max-w-xs">
+              VENKATA SAMBA SIVA JEWELLERIES & DIAMONDS
+            </p>
             <p className="text-gray-400 text-sm mb-4 max-w-xs">
-              Timeless elegance in every piece. Crafting beautiful jewelry since 1995.
+              Timeless elegance in every piece. Crafting beautiful jewelry since 2013.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social, index) => (
@@ -150,6 +153,9 @@ const Footer = () => {
           <p className="text-sm text-gray-500 mb-4 sm:mb-0">
             &copy; {currentYear} Siva Jewellery. All rights reserved.
           </p>
+          <p className="text-sm text-white mb-4 sm:mb-0">
+            Developed by <a href="https://staffarc.in" target="_blank" className="text-amber-400 hover:text-amber-600 transition-colors duration-200">Staffarc</a>
+          </p>
           <div className="flex space-x-6 text-sm">
             <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors duration-200">
               Privacy Policy
@@ -157,10 +163,6 @@ const Footer = () => {
             <span className="text-gray-600">•</span>
             <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors duration-200">
               Terms of Service
-            </a>
-            <span className="text-gray-600">•</span>
-            <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors duration-200">
-              Sitemap
             </a>
           </div>
         </motion.div>
