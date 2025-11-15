@@ -10,7 +10,7 @@ const HeroSection = ({ goldRate, silverRate, banners = [] }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   // FIXED: Use Django MEDIA_URL properly
-  const BACKEND_URL = "https://sivajewellerysanddiamonds.com/media/";
+  const BACKEND_URL = "https://api.sivajewellerysanddiamonds.com/media/";
 
   // Fallback slides
   const fallbackSlides = [

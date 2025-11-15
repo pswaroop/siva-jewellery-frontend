@@ -6,7 +6,7 @@ import HeroSection from '../../components/HeroSection';
 import FeaturedCollections from '../../components/FeaturedCollections';
 import PropTypes from 'prop-types';
 
-const API_BASE_URL = 'https://sivajewellerysanddiamonds.com/api';
+const API_BASE_URL = 'https://api.sivajewellerysanddiamonds.com/api';
 
 const features = [
   {

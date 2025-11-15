@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://sivajewellerysanddiamonds.com/api';
+const API_BASE_URL = 'https://api.sivajewellerysanddiamonds.com/api';
 
 const FeaturedCollections = ({ 
   showOnlyFeatured = false, 

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const FeaturedCollections = lazy(() => import('../../components/FeaturedCollections'));
 
-const API_BASE_URL = 'https://sivajewellerysanddiamonds.com/api';
+const API_BASE_URL = 'https://api.sivajewellerysanddiamonds.com/api';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
