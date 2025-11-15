@@ -149,7 +149,7 @@ const HeroSection = ({ goldRate, silverRate, banners = [] }) => {
                 <span className="text-xl font-bold text-amber-400">
                   {Math.round(goldRate).toLocaleString("en-IN")}
                 </span>
-                <span className="text-sm ml-1">/gram</span>
+                <span className="text-sm ml-1">/g</span>
               </div>
             )}
             {silverRate > 0 && (
@@ -161,7 +161,7 @@ const HeroSection = ({ goldRate, silverRate, banners = [] }) => {
                   <span className="text-xl font-bold text-gray-200">
                     {Math.round(silverRate).toLocaleString("en-IN")}
                   </span>
-                  <span className="text-sm ml-1">/gram</span>
+                  <span className="text-sm ml-1">/g</span>
                 </div>
               </>
             )}
